@@ -41,9 +41,9 @@ export default function Contact() {
     e.preventDefault();
     setStatus("sending");
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/contact`,
+      await axios.post(   `${"https://ayush-portfolio-512f.onrender.com"}/contact`,
         form
+     
       );
       setStatus("success");
       setForm({ name: "", email: "", subject: "", message: "" });
