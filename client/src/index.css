@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --bg: #080B10;
+  --surface: #0E1118;
+  --card: #131720;
+  --border: rgba(255, 255, 255, 0.07);
+  --accent: #00E5A0;
+  --accent2: #0099FF;
+  --text: #E8EDF5;
+  --muted: #6B7688;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Light mode overrides */
+.light {
+  --bg: #F4F6FA;
+  --surface: #FFFFFF;
+  --card: #FFFFFF;
+  --border: rgba(0, 0, 0, 0.08);
+  --text: #0D1117;
+  --muted: #5A6478;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 229, 160, 0.2);
+  color: var(--accent);
+}
+
+/* Utility classes */
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effects */
+.glow-accent {
+  box-shadow: 0 0 20px rgba(0, 229, 160, 0.3);
+}
+.glow-accent:hover {
+  box-shadow: 0 0 35px rgba(0, 229, 160, 0.5);
+}
+
+/* Section spacing */
+.section-pad {
+  padding: 7rem 0;
+}
+
+/* Glass card */
+.glass {
+  background: rgba(19, 23, 32, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+}
+
+/* Animated gradient border */
+@keyframes borderRotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Pulse animation */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* Scroll down indicator */
+@keyframes scrollDown {
+  0% { opacity: 1; transform: scaleY(0); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
+}
+
+.scroll-line-anim {
+  animation: scrollDown 1.5s ease infinite;
+}
+
+/* Loader fill */
+@keyframes loaderFill {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.loader-fill-anim {
+  animation: loaderFill 1.8s ease forwards;
+}
+
+/* Blink cursor */
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.blink {
+  animation: blinkCursor 1s infinite;
+}
+
+/* Counter highlight */
+@keyframes countPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* Form focus ring */
+.form-field:focus {
+  outline: none;
+  border-color: rgba(0, 229, 160, 0.4);
+  box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.06);
+}
+
+/* Mobile nav */
+@media (max-width: 768px) {
+  .section-pad {
+    padding: 5rem 0;
+  }
+}
