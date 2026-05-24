@@ -31,8 +31,14 @@ const CONTACT_LINKS = [
 ];
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
-  const [status, setStatus] = useState(null); // null | 'sending' | 'success' | 'error'
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [status, setStatus] = useState(null);
+  const [statusMessage, setStatusMessage] = useState("");
 
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -40,15 +46,25 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
+    setStatusMessage("");
     try {
-      await axios.post(   `${"https://ayush-portfolio-512f.onrender.com"}/contact`,
-        form
-     
-      );
+      // Build API endpoint robustly whether VITE_API_URL includes /api or not
+      const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const base = API.replace(/\/$/, "");
+      const endpoint = /\/api(\/)?$/.test(base) ? `${base}/contact` : `${base}/api/contact`;
+      await axios.post(endpoint, form);
       setStatus("success");
+      setStatusMessage("Message sent! I'll get back to you soon.");
       setForm({ name: "", email: "", subject: "", message: "" });
-    } catch {
+    } catch (err) {
+      // Log actual error so you can debug
+      const errorMessage =
+        err?.response?.data?.message ||
+        err.message ||
+        `Failed to send. Please email me directly at ${PERSONAL.email}`;
+      console.error("Contact form error:", err?.response?.data || err.message);
       setStatus("error");
+      setStatusMessage(errorMessage);
     }
   };
 
@@ -63,6 +79,15 @@ export default function Contact() {
     outline: "none",
     width: "100%",
     transition: "border-color 0.2s, box-shadow 0.2s",
+  };
+
+  const focusStyle = (e) => {
+    e.target.style.borderColor = "rgba(0,229,160,0.4)";
+    e.target.style.boxShadow = "0 0 0 3px rgba(0,229,160,0.06)";
+  };
+  const blurStyle = (e) => {
+    e.target.style.borderColor = "var(--border)";
+    e.target.style.boxShadow = "none";
   };
 
   return (
@@ -106,7 +131,9 @@ export default function Contact() {
                 color: "var(--text)",
               }}
             >
-              Get In<br />Touch
+              Get In
+              <br />
+              Touch
             </h2>
             <p
               style={{
@@ -116,12 +143,17 @@ export default function Contact() {
                 marginBottom: "2rem",
               }}
             >
-              Open to internships, full-time roles, and interesting collaboration
-              opportunities. I respond within 24 hours.
+              Open to internships, full-time roles, and interesting
+              collaboration opportunities. I respond within 24 hours.
             </p>
 
-            {/* Contact links */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem",
+              }}
+            >
               {CONTACT_LINKS.map((cl) => (
                 <motion.a
                   key={cl.label}
@@ -178,7 +210,9 @@ export default function Contact() {
                       {cl.value}
                     </div>
                   </div>
-                  <span style={{ color: "var(--muted)", fontSize: "0.8rem" }}>↗</span>
+                  <span style={{ color: "var(--muted)", fontSize: "0.8rem" }}>
+                    ↗
+                  </span>
                 </motion.a>
               ))}
             </div>
@@ -195,7 +229,7 @@ export default function Contact() {
               onSubmit={handleSubmit}
               style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
             >
-              {/* Name + Email row */}
+              {/* Name + Email */}
               <div
                 style={{
                   display: "grid",
@@ -203,7 +237,13 @@ export default function Contact() {
                   gap: "1rem",
                 }}
               >
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.4rem",
+                  }}
+                >
                   <label
                     style={{
                       fontFamily: "var(--font-mono)",
@@ -222,17 +262,17 @@ export default function Contact() {
                     placeholder="Your name"
                     required
                     style={inputStyle}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "rgba(0,229,160,0.4)";
-                      e.target.style.boxShadow = "0 0 0 3px rgba(0,229,160,0.06)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "var(--border)";
-                      e.target.style.boxShadow = "none";
-                    }}
+                    onFocus={focusStyle}
+                    onBlur={blurStyle}
                   />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.4rem",
+                  }}
+                >
                   <label
                     style={{
                       fontFamily: "var(--font-mono)",
@@ -251,20 +291,20 @@ export default function Contact() {
                     placeholder="your@email.com"
                     required
                     style={inputStyle}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "rgba(0,229,160,0.4)";
-                      e.target.style.boxShadow = "0 0 0 3px rgba(0,229,160,0.06)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "var(--border)";
-                      e.target.style.boxShadow = "none";
-                    }}
+                    onFocus={focusStyle}
+                    onBlur={blurStyle}
                   />
                 </div>
               </div>
 
               {/* Subject */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.4rem",
+                }}
+              >
                 <label
                   style={{
                     fontFamily: "var(--font-mono)",
@@ -282,19 +322,19 @@ export default function Contact() {
                   onChange={handleChange}
                   placeholder="Internship / Collaboration / Hire"
                   style={inputStyle}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "rgba(0,229,160,0.4)";
-                    e.target.style.boxShadow = "0 0 0 3px rgba(0,229,160,0.06)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "var(--border)";
-                    e.target.style.boxShadow = "none";
-                  }}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
                 />
               </div>
 
               {/* Message */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.4rem",
+                }}
+              >
                 <label
                   style={{
                     fontFamily: "var(--font-mono)",
@@ -313,14 +353,8 @@ export default function Contact() {
                   required
                   rows={5}
                   style={{ ...inputStyle, resize: "vertical", minHeight: 130 }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "rgba(0,229,160,0.4)";
-                    e.target.style.boxShadow = "0 0 0 3px rgba(0,229,160,0.06)";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "var(--border)";
-                    e.target.style.boxShadow = "none";
-                  }}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
                 />
               </div>
 
@@ -347,7 +381,7 @@ export default function Contact() {
                 {status === "sending" ? "Sending..." : "Send Message →"}
               </motion.button>
 
-              {/* Status messages */}
+              {/* Status */}
               {status === "success" && (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
@@ -362,7 +396,7 @@ export default function Contact() {
                     textAlign: "center",
                   }}
                 >
-                  ✓ Message sent! I'll get back to you soon.
+                  {statusMessage}
                 </motion.div>
               )}
               {status === "error" && (
@@ -379,7 +413,8 @@ export default function Contact() {
                     textAlign: "center",
                   }}
                 >
-                  Failed to send. Please email me directly at {PERSONAL.email}
+                  {statusMessage ||
+                    `Failed to send. Please email me directly at ${PERSONAL.email}`}
                 </motion.div>
               )}
             </form>
