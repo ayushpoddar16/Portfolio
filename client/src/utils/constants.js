@@ -45,7 +45,7 @@ export const SKILLS = [
   {
     icon: "⚛️",
     name: "Frontend",
-    pills: ["React.js", "JavaScript", "Tailwind CSS", "Vite", "HTML5", "CSS3"],
+    pills: ["React.js", "JavaScript", "Tailwind CSS", "Vite"],
   },
   {
     icon: "⚙️",
