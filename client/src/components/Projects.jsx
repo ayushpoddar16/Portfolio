@@ -1,14 +1,8 @@
-import { motion } from "framer-motion";
 import { PROJECTS } from "../utils/constants";
 
-function ProjectCard({ project, index }) {
+function ProjectCard({ project }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay: index * 0.12 }}
-      whileHover={{ y: -6, borderColor: "rgba(0,229,160,0.25)" }}
+    <div
       style={{
         background: "var(--card)",
         border: "1px solid var(--border)",
@@ -16,10 +10,8 @@ function ProjectCard({ project, index }) {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        transition: "border-color 0.3s",
       }}
     >
-      {/* Thumbnail */}
       <div
         style={{
           height: 180,
@@ -31,7 +23,6 @@ function ProjectCard({ project, index }) {
           justifyContent: "center",
         }}
       >
-        {/* Background label */}
         <span
           style={{
             fontFamily: "var(--font-display)",
@@ -45,8 +36,6 @@ function ProjectCard({ project, index }) {
         >
           {project.label}
         </span>
-
-        {/* Floating tech badges on thumbnail */}
         <div
           style={{
             position: "absolute",
@@ -56,26 +45,23 @@ function ProjectCard({ project, index }) {
             gap: "0.4rem",
           }}
         >
-          {project.stack.slice(0, 3).map((t) => (
+          {project.stack.slice(0, 3).map((tech) => (
             <span
-              key={t}
+              key={tech}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.62rem",
-                background: "rgba(0,0,0,0.5)",
-                backdropFilter: "blur(8px)",
-                color: "rgba(255,255,255,0.6)",
+                background: "rgba(0,0,0,0.45)",
+                color: "rgba(255,255,255,0.8)",
                 border: "1px solid rgba(255,255,255,0.1)",
                 borderRadius: 4,
                 padding: "0.15rem 0.45rem",
               }}
             >
-              {t}
+              {tech}
             </span>
           ))}
         </div>
-
-        {/* Accent bottom line */}
         <div
           style={{
             position: "absolute",
@@ -88,62 +74,47 @@ function ProjectCard({ project, index }) {
         />
       </div>
 
-      {/* Body */}
-      <div
-        style={{
-          padding: "1.5rem",
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <h3
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "1.2rem",
-            fontWeight: 800,
-            marginBottom: "0.25rem",
-            letterSpacing: "-0.02em",
-            color: "var(--text)",
-          }}
-        >
-          {project.name}
-        </h3>
-        <p
-          style={{
-            fontSize: "0.78rem",
-            color: "var(--accent)",
-            fontWeight: 500,
-            marginBottom: "1rem",
-          }}
-        >
-          {project.tagline}
-        </p>
+      <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.9rem" }}>
+        <div>
+          <h3
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "1.2rem",
+              fontWeight: 800,
+              marginBottom: "0.25rem",
+              letterSpacing: "-0.02em",
+              color: "var(--text)",
+            }}
+          >
+            {project.name}
+          </h3>
+          <p
+            style={{
+              fontSize: "0.78rem",
+              color: "var(--accent)",
+              fontWeight: 500,
+              marginTop: "0.35rem",
+            }}
+          >
+            {project.tagline}
+          </p>
+        </div>
 
-        <p
-          style={{
-            fontSize: "0.87rem",
-            color: "var(--muted)",
-            lineHeight: 1.75,
-            flex: 1,
-            marginBottom: "1rem",
-          }}
-        >
+        <p style={{ fontSize: "0.87rem", color: "var(--muted)", lineHeight: 1.75 }}>
           {project.desc}
         </p>
 
-        {/* Features */}
-        <ul style={{ listStyle: "none", marginBottom: "1.25rem" }}>
-          {project.features.map((f) => (
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {project.features.map((feature) => (
             <li
-              key={f}
+              key={feature}
               style={{
-                fontSize: "0.81rem",
+                fontSize: "0.82rem",
                 color: "var(--muted)",
-                padding: "0.2rem 0",
-                paddingLeft: "1rem",
+                padding: "0.3rem 0",
+                paddingLeft: "1.2rem",
                 position: "relative",
-                lineHeight: 1.6,
+                lineHeight: 1.7,
               }}
             >
               <span
@@ -151,38 +122,36 @@ function ProjectCard({ project, index }) {
                   position: "absolute",
                   left: 0,
                   color: "var(--accent)",
-                  fontSize: "0.7rem",
+                  fontSize: "0.75rem",
                 }}
               >
                 ▸
               </span>
-              {f}
+              {feature}
             </li>
           ))}
         </ul>
 
-        {/* Stack tags */}
-        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
-          {project.stack.map((t) => (
+        <div style={{ display: "flex", gap: "0.7rem", flexWrap: "wrap" }}>
+          {project.stack.map((tech) => (
             <span
-              key={t}
+              key={tech}
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "0.66rem",
+                fontSize: "0.7rem",
                 background: "rgba(255,255,255,0.04)",
                 color: "var(--muted)",
                 border: "1px solid var(--border)",
                 borderRadius: 4,
-                padding: "0.2rem 0.5rem",
+                padding: "0.28rem 0.55rem",
               }}
             >
-              {t}
+              {tech}
             </span>
           ))}
         </div>
 
-        {/* Links */}
-        <div style={{ display: "flex", gap: "0.75rem" }}>
+        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           <a
             href={project.github}
             target="_blank"
@@ -192,15 +161,13 @@ function ProjectCard({ project, index }) {
               textAlign: "center",
               fontSize: "0.8rem",
               fontWeight: 600,
-              padding: "0.6rem",
-              borderRadius: 8,
+              padding: "0.75rem",
+              borderRadius: 10,
               background: "rgba(255,255,255,0.05)",
               color: "var(--text)",
               border: "1px solid var(--border)",
-              transition: "background 0.2s",
+              textDecoration: "none",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
           >
             GitHub
           </a>
@@ -213,35 +180,26 @@ function ProjectCard({ project, index }) {
               textAlign: "center",
               fontSize: "0.8rem",
               fontWeight: 600,
-              padding: "0.6rem",
-              borderRadius: 8,
+              padding: "0.75rem",
+              borderRadius: 10,
               background: "rgba(0,229,160,0.12)",
               color: "var(--accent)",
               border: "1px solid rgba(0,229,160,0.2)",
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "var(--accent)";
-              e.currentTarget.style.color = "var(--bg)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(0,229,160,0.12)";
-              e.currentTarget.style.color = "var(--accent)";
+              textDecoration: "none",
             }}
           >
             Live Demo ↗
           </a>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export default function Projects() {
   return (
     <section id="projects" style={{ padding: "7rem 0" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
-        {/* Header */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 1.5rem" }}>
         <div
           style={{
             display: "flex",
@@ -252,12 +210,7 @@ export default function Projects() {
             gap: "1rem",
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <p
               style={{
                 fontFamily: "var(--font-mono)",
@@ -282,39 +235,27 @@ export default function Projects() {
             >
               Projects
             </h2>
-          </motion.div>
+          </div>
 
-          <motion.a
+          <a
             href="https://github.com/ayushpoddar16"
             target="_blank"
             rel="noopener noreferrer"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             style={{
               background: "transparent",
               color: "var(--text)",
               fontWeight: 600,
               fontSize: "0.82rem",
-              padding: "0.6rem 1.2rem",
-              borderRadius: 50,
+              padding: "0.65rem 1rem",
+              borderRadius: 9999,
               border: "1px solid var(--border)",
-              transition: "border-color 0.2s, color 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "var(--accent)";
-              e.currentTarget.style.color = "var(--accent)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "var(--border)";
-              e.currentTarget.style.color = "var(--text)";
+              textDecoration: "none",
             }}
           >
             All on GitHub ↗
-          </motion.a>
+          </a>
         </div>
 
-        {/* Grid */}
         <div
           style={{
             display: "grid",
@@ -322,8 +263,8 @@ export default function Projects() {
             gap: "1.5rem",
           }}
         >
-          {PROJECTS.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+          {PROJECTS.map((project) => (
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       </div>

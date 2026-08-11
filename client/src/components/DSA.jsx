@@ -1,19 +1,8 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
 import { DSA_COUNTERS, ACHIEVEMENTS } from "../utils/constants";
-import { useCountUp } from "../hooks/useCountUp";
 
-function CounterCard({ counter, index }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-  const count = useCountUp(counter.target, 1600, inView);
-
+function CounterCard({ counter }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+    <div
       style={{
         background: "var(--card)",
         border: "1px solid var(--border)",
@@ -24,7 +13,6 @@ function CounterCard({ counter, index }) {
         overflow: "hidden",
       }}
     >
-      {/* Top accent line */}
       <div
         style={{
           position: "absolute",
@@ -39,65 +27,40 @@ function CounterCard({ counter, index }) {
       <div
         style={{
           fontFamily: "var(--font-display)",
-          fontSize: "2.5rem",
+          fontSize: "2.4rem",
           fontWeight: 800,
           color: "var(--accent)",
           lineHeight: 1,
         }}
       >
-        {count}
-        {counter.suffix && (
-          <span style={{ color: "var(--accent2)", fontSize: "2rem" }}>
-            {counter.suffix}
-          </span>
-        )}
+        {counter.target}
+        {counter.suffix && <span style={{ color: "var(--accent2)", fontSize: "2rem" }}>{counter.suffix}</span>}
       </div>
 
-      <div
-        style={{
-          fontSize: "0.8rem",
-          color: "var(--muted)",
-          marginTop: "0.4rem",
-          fontWeight: 500,
-        }}
-      >
+      <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: "0.4rem", fontWeight: 500 }}>
         {counter.label}
       </div>
 
-      <div
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "0.65rem",
-          color: "var(--muted)",
-          marginTop: "0.3rem",
-          opacity: 0.6,
-        }}
-      >
+      <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--muted)", marginTop: "0.3rem", opacity: 0.7 }}>
         {counter.sub}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export default function DSA() {
   return (
-    <section id="dsa" style={{ padding: "7rem 0" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
+    <section id="dsa" style={{ padding: "6rem 0" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 1.5rem" }}>
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "4rem",
-            alignItems: "center",
+            gap: "3rem",
+            alignItems: "start",
           }}
         >
-          {/* Left: Text + Achievements */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7 }}
-          >
+          <div>
             <p
               style={{
                 fontFamily: "var(--font-mono)",
@@ -121,31 +84,17 @@ export default function DSA() {
                 color: "var(--text)",
               }}
             >
-              DSA &<br />Achievements
+              DSA &
+              <br />Achievements
             </h2>
-
-            <p
-              style={{
-                color: "var(--muted)",
-                fontSize: "0.95rem",
-                lineHeight: 1.85,
-                marginBottom: "1.75rem",
-              }}
-            >
-              Consistent problem-solving habit built on daily LeetCode practice.
-              300+ problems solved across arrays, trees, graphs, DP and more —
-              directly translating to cleaner, more efficient production code.
+            <p style={{ color: "var(--muted)", fontSize: "0.95rem", lineHeight: 1.85, marginBottom: "1.75rem" }}>
+              Consistent problem-solving habit built on daily LeetCode practice. 300+ problems solved across arrays, trees, graphs,
+              DP and more — directly translating to cleaner, more efficient production code.
             </p>
-
-            {/* Achievement list */}
-            <ul style={{ listStyle: "none" }}>
-              {ACHIEVEMENTS.map((ach, i) => (
-                <motion.li
-                  key={i}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: i * 0.08 }}
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+              {ACHIEVEMENTS.map((achievement, index) => (
+                <li
+                  key={index}
                   style={{
                     display: "flex",
                     alignItems: "flex-start",
@@ -157,33 +106,16 @@ export default function DSA() {
                     lineHeight: 1.6,
                   }}
                 >
-                  <span style={{ fontSize: "1rem", marginTop: "1px", flexShrink: 0 }}>
-                    {ach.icon}
-                  </span>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: ach.text
-                        .replace(/(JEE 2022|Class 12th|CGPA 7\.6)/g, "<strong style='color:var(--text);font-weight:600'>$1</strong>")
-                        .replace(/(95 Percentile|93\.66%|7\.6)/g, "<strong style='color:var(--accent)'>$1</strong>")
-                        .replace(/(JWT Auth|Razorpay|Multer|OTP verification)/g, "<strong style='color:var(--text);font-weight:500'>$1</strong>")
-                        .replace(/(Google Gemini Vision AI & OCR)/g, "<strong style='color:var(--text);font-weight:500'>$1</strong>"),
-                    }}
-                  />
-                </motion.li>
+                  <span style={{ fontSize: "1rem", marginTop: "1px", flexShrink: 0 }}>{achievement.icon}</span>
+                  <span>{achievement.text}</span>
+                </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
 
-          {/* Right: Counter cards */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-            }}
-          >
-            {DSA_COUNTERS.map((c, i) => (
-              <CounterCard key={c.label} counter={c} index={i} />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            {DSA_COUNTERS.map((counter) => (
+              <CounterCard key={counter.label} counter={counter} />
             ))}
           </div>
         </div>

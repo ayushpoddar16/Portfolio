@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import axios from "axios";
 import { PERSONAL } from "../utils/constants";
 
@@ -31,37 +30,39 @@ const CONTACT_LINKS = [
 ];
 
 export default function Contact() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [status, setStatus] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
 
-  const handleChange = (e) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
     setStatusMessage("");
+
     try {
-      // Build API endpoint robustly whether VITE_API_URL includes /api or not
-      const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const defaultApiBase =
+        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+          ? "http://localhost:5000"
+          : "";
+      const API = import.meta.env.VITE_API_URL || defaultApiBase;
       const base = API.replace(/\/$/, "");
-      const endpoint = /\/api(\/)?$/.test(base) ? `${base}/contact` : `${base}/api/contact`;
+      const endpoint = API
+        ? /\/api(\/)?$/.test(base)
+          ? `${base}/contact`
+          : `${base}/api/contact`
+        : "/api/contact";
       await axios.post(endpoint, form);
       setStatus("success");
       setStatusMessage("Message sent! I'll get back to you soon.");
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
-      // Log actual error so you can debug
-      const errorMessage =
-        err?.response?.data?.message ||
-        err.message ||
-        `Failed to send. Please email me directly at ${PERSONAL.email}`;
+      const errorMessage = !err?.response
+        ? "Unable to reach the contact server. Make sure the backend is running and the API endpoint is accessible."
+        : err?.response?.data?.message ||
+          err.message ||
+          `Failed to send. Please email me directly at ${PERSONAL.email}`;
       console.error("Contact form error:", err?.response?.data || err.message);
       setStatus("error");
       setStatusMessage(errorMessage);
@@ -91,23 +92,17 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" style={{ padding: "7rem 0" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
+    <section id="contact" style={{ padding: "6rem 0" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 1.5rem" }}>
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "4rem",
+            gap: "3rem",
             alignItems: "start",
           }}
         >
-          {/* Left: Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7 }}
-          >
+          <div>
             <p
               style={{
                 fontFamily: "var(--font-mono)",
@@ -135,32 +130,16 @@ export default function Contact() {
               <br />
               Touch
             </h2>
-            <p
-              style={{
-                color: "var(--muted)",
-                fontSize: "0.95rem",
-                lineHeight: 1.85,
-                marginBottom: "2rem",
-              }}
-            >
-              Open to internships, full-time roles, and interesting
-              collaboration opportunities. I respond within 24 hours.
+            <p style={{ color: "var(--muted)", fontSize: "0.95rem", lineHeight: 1.85, marginBottom: "2rem" }}>
+              Open to internships, full-time roles, and interesting collaboration opportunities. I respond within 24 hours.
             </p>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
-              }}
-            >
-              {CONTACT_LINKS.map((cl) => (
-                <motion.a
-                  key={cl.label}
-                  href={cl.href}
-                  target={cl.label !== "EMAIL" ? "_blank" : undefined}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              {CONTACT_LINKS.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target={item.label !== "EMAIL" ? "_blank" : undefined}
                   rel="noopener noreferrer"
-                  whileHover={{ x: 4, borderColor: "rgba(0,229,160,0.3)" }}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -169,8 +148,8 @@ export default function Contact() {
                     border: "1px solid var(--border)",
                     borderRadius: 12,
                     padding: "0.9rem 1.2rem",
-                    transition: "border-color 0.2s",
                     textDecoration: "none",
+                    color: "var(--text)",
                   }}
                 >
                   <div
@@ -186,7 +165,7 @@ export default function Contact() {
                       flexShrink: 0,
                     }}
                   >
-                    {cl.icon}
+                    {item.icon}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div
@@ -197,53 +176,22 @@ export default function Contact() {
                         letterSpacing: "0.08em",
                       }}
                     >
-                      {cl.label}
+                      {item.label}
                     </div>
-                    <div
-                      style={{
-                        fontSize: "0.88rem",
-                        fontWeight: 500,
-                        color: "var(--text)",
-                        marginTop: "0.1rem",
-                      }}
-                    >
-                      {cl.value}
+                    <div style={{ fontSize: "0.88rem", fontWeight: 500, marginTop: "0.1rem" }}>
+                      {item.value}
                     </div>
                   </div>
-                  <span style={{ color: "var(--muted)", fontSize: "0.8rem" }}>
-                    ↗
-                  </span>
-                </motion.a>
+                  <span style={{ color: "var(--muted)", fontSize: "0.8rem" }}>↗</span>
+                </a>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right: Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-          >
-            <form
-              onSubmit={handleSubmit}
-              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-            >
-              {/* Name + Email */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "1rem",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.4rem",
-                  }}
-                >
+          <div>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                   <label
                     style={{
                       fontFamily: "var(--font-mono)",
@@ -266,13 +214,7 @@ export default function Contact() {
                     onBlur={blurStyle}
                   />
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.4rem",
-                  }}
-                >
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                   <label
                     style={{
                       fontFamily: "var(--font-mono)",
@@ -297,14 +239,7 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Subject */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.4rem",
-                }}
-              >
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                 <label
                   style={{
                     fontFamily: "var(--font-mono)",
@@ -327,14 +262,7 @@ export default function Contact() {
                 />
               </div>
 
-              {/* Message */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.4rem",
-                }}
-              >
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                 <label
                   style={{
                     fontFamily: "var(--font-mono)",
@@ -358,12 +286,9 @@ export default function Contact() {
                 />
               </div>
 
-              {/* Submit */}
-              <motion.button
+              <button
                 type="submit"
                 disabled={status === "sending"}
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
                 style={{
                   background: "var(--accent)",
                   color: "var(--bg)",
@@ -374,18 +299,15 @@ export default function Contact() {
                   border: "none",
                   cursor: status === "sending" ? "not-allowed" : "pointer",
                   opacity: status === "sending" ? 0.7 : 1,
-                  boxShadow: "0 0 20px rgba(0,229,160,0.25)",
+                  boxShadow: "0 0 20px rgba(0,229,160,0.18)",
                   fontFamily: "var(--font-body)",
                 }}
               >
                 {status === "sending" ? "Sending..." : "Send Message →"}
-              </motion.button>
+              </button>
 
-              {/* Status */}
               {status === "success" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <div
                   style={{
                     background: "rgba(0,229,160,0.1)",
                     color: "var(--accent)",
@@ -397,12 +319,11 @@ export default function Contact() {
                   }}
                 >
                   {statusMessage}
-                </motion.div>
+                </div>
               )}
+
               {status === "error" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <div
                   style={{
                     background: "rgba(255,80,80,0.1)",
                     color: "#FF8080",
@@ -413,12 +334,11 @@ export default function Contact() {
                     textAlign: "center",
                   }}
                 >
-                  {statusMessage ||
-                    `Failed to send. Please email me directly at ${PERSONAL.email}`}
-                </motion.div>
+                  {statusMessage || `Failed to send. Please email me directly at ${PERSONAL.email}`}
+                </div>
               )}
             </form>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

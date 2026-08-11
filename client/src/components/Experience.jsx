@@ -1,20 +1,14 @@
-import { motion } from "framer-motion";
 import { EXPERIENCE } from "../utils/constants";
 
-function ExpItem({ exp, index }) {
+function ExpItem({ exp }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -24 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay: index * 0.12 }}
+    <div
       style={{
         paddingLeft: "2.5rem",
         position: "relative",
         marginBottom: "3rem",
       }}
     >
-      {/* Timeline dot */}
       <div
         style={{
           position: "absolute",
@@ -24,11 +18,9 @@ function ExpItem({ exp, index }) {
           height: 11,
           borderRadius: "50%",
           background: "var(--accent)",
-          boxShadow: "0 0 14px rgba(0,229,160,0.5)",
+          boxShadow: "0 0 14px rgba(0,229,160,0.4)",
         }}
       />
-
-      {/* Meta row */}
       <div
         style={{
           display: "flex",
@@ -62,8 +54,6 @@ function ExpItem({ exp, index }) {
           {exp.period}
         </span>
       </div>
-
-      {/* Role */}
       <p
         style={{
           fontSize: "0.85rem",
@@ -74,8 +64,6 @@ function ExpItem({ exp, index }) {
       >
         {exp.role}
       </p>
-
-      {/* Description */}
       <p
         style={{
           color: "var(--muted)",
@@ -86,13 +74,11 @@ function ExpItem({ exp, index }) {
       >
         {exp.desc}
       </p>
-
-      {/* Achievements */}
       {exp.achievements.length > 0 && (
-        <ul style={{ listStyle: "none", marginBottom: "0.75rem" }}>
-          {exp.achievements.map((ach, i) => (
+        <ul style={{ listStyle: "none", marginBottom: "0.75rem", padding: 0 }}>
+          {exp.achievements.map((achievement, idx) => (
             <li
-              key={i}
+              key={idx}
               style={{
                 fontSize: "0.88rem",
                 color: "var(--muted)",
@@ -112,20 +98,11 @@ function ExpItem({ exp, index }) {
               >
                 →
               </span>
-              <span dangerouslySetInnerHTML={{
-                __html: ach
-                  .replace(/10\+ RESTful APIs/g, "<strong style='color:var(--text);font-weight:500'>10+ RESTful APIs</strong>")
-                  .replace(/Razorpay payment gateway/g, "<strong style='color:var(--text);font-weight:500'>Razorpay payment gateway</strong>")
-                  .replace(/WhatsApp notification system/g, "<strong style='color:var(--text);font-weight:500'>WhatsApp notification system</strong>")
-                  .replace(/JWT-based authentication/g, "<strong style='color:var(--text);font-weight:500'>JWT-based authentication</strong>")
-                  .replace(/full-stack MERN features/g, "<strong style='color:var(--text);font-weight:500'>full-stack MERN features</strong>")
-              }} />
+              {achievement}
             </li>
           ))}
         </ul>
       )}
-
-      {/* Tags */}
       <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
         {exp.tags.map((tag) => (
           <span
@@ -144,22 +121,15 @@ function ExpItem({ exp, index }) {
           </span>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export default function Experience() {
   return (
-    <section id="experience" style={{ padding: "7rem 0" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          style={{ marginBottom: "3rem" }}
-        >
+    <section id="experience" style={{ padding: "6rem 0" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 1.5rem" }}>
+        <div style={{ marginBottom: "3rem" }}>
           <p
             style={{
               fontFamily: "var(--font-mono)",
@@ -184,16 +154,9 @@ export default function Experience() {
           >
             Experience
           </h2>
-        </motion.div>
+        </div>
 
-        {/* Timeline */}
-        <div
-          style={{
-            position: "relative",
-            paddingLeft: "0.5rem",
-          }}
-        >
-          {/* Vertical line */}
+        <div style={{ position: "relative", paddingLeft: "0.5rem" }}>
           <div
             style={{
               position: "absolute",
@@ -204,9 +167,8 @@ export default function Experience() {
               background: "linear-gradient(to bottom, var(--accent), transparent)",
             }}
           />
-
-          {EXPERIENCE.map((exp, i) => (
-            <ExpItem key={exp.company} exp={exp} index={i} />
+          {EXPERIENCE.map((exp) => (
+            <ExpItem key={exp.company} exp={exp} />
           ))}
         </div>
       </div>
