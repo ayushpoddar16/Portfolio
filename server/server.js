@@ -30,7 +30,7 @@ const clientOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://portfolio-backend-ryqt.onrender.com",
+  "https://portfolio-ayush-g8a8.onrender.com",
 ].filter(Boolean);
 
 console.log("CORS origins:", clientOrigins);
